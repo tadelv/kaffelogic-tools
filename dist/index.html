@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kaffelogic tools</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="./style.css?v=39dec671ce">
+</head>
+<body>
+<nav class="nav"><span>roast log</span><a href="./dial.html">dial in →</a></nav>
+
+<h1>Kaffelogic tools</h1>
+<p class="lead">Drop a roast log to see where the curve missed. Add what you tasted, edit the profile, download it.
+Everything runs in this browser — no upload, no server.</p>
+
+<section class="drop" id="logDrop">
+  <input type="file" id="logInput" accept=".klog,text/plain">
+  <label for="logInput"><strong>Roast log</strong><br><span class="hint">.klog from the USB stick</span></label>
+  <div class="file" id="logName">no file</div>
+</section>
+
+<section class="drop" id="profileDrop" style="margin-top:14px">
+  <input type="file" id="profileInput" accept=".kpro,text/plain">
+  <label for="profileInput"><strong>Profile</strong><br><span class="hint">.kpro — optional until you want a diff or an edit</span></label>
+  <div class="file" id="profileName">no file</div>
+</section>
+
+<div id="warn" class="warn hidden"></div>
+
+<section id="summary" class="hidden">
+  <h2>Roast</h2>
+  <table id="summaryTable"></table>
+</section>
+
+<section id="chartSection" class="hidden">
+  <h2>Curve</h2>
+  <div id="charts"></div>
+</section>
+
+<section id="phaseSection" class="hidden">
+  <h2>Where the curve missed</h2>
+  <table id="phaseTable"></table>
+  <p class="hint" id="phaseNote"></p>
+</section>
+
+<section id="tasteSection" class="hidden">
+  <h2>What did you taste?</h2>
+  <ul class="chips" id="chips"></ul>
+  <div class="row">
+    <input type="text" id="comment" placeholder="notes (optional): sweetness, acidity, finish…">
+  </div>
+</section>
+
+<section id="editSection" class="hidden">
+  <h2>Proposed edit</h2>
+  <div id="editRows"></div>
+  <div class="row">
+    <button class="act" id="downloadBtn">Download edited .kpro</button>
+    <button class="ghost" id="briefBtn">Copy agent brief</button>
+  </div>
+  <p class="hint" id="editNote"></p>
+  <pre id="briefOut" class="hidden"></pre>
+</section>
+
+<footer>Formats are plain text; the tool never sends your files anywhere. Heuristics are coarse — confirm with one roast.</footer>
+
+<script type="module" src="./app.js?v=39dec671ce"></script>
+</body>
+</html>

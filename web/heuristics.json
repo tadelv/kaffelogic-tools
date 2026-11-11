@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "note": "Directional heuristics only. Each rule adds a delta to a profile key; the interpreter clamps to the edit bounds. Deltas are deliberately small so one roast can attribute the effect.",
+  "rules": [
+    {
+      "id": "density-low",
+      "when": { "field": "density", "lt": 650 },
+      "why": "low density (<650 g/L): less thermal mass, so a gentler start avoids scorching the surface before the interior catches up",
+      "edits": { "preheat_nominal_temperature": -5, "roast_required_power": -50, "roast_min_desired_rate_of_rise": -1 }
+    },
+    {
+      "id": "density-high",
+      "when": { "field": "density", "gte": 750 },
+      "why": "high density (>=750 g/L): more thermal mass and lower conductivity, so more energy early keeps the curve on target",
+      "edits": { "preheat_nominal_temperature": 5, "roast_required_power": 60, "roast_min_desired_rate_of_rise": 1 }
+    },
+    {
+      "id": "moisture-high",
+      "when": { "field": "moisture", "gt": 11.5 },
+      "why": "high moisture (>11.5%): more energy is spent drying, so push the drying phase harder",
+      "edits": { "preheat_nominal_temperature": 4, "roast_required_power": 40 }
+    },
+    {
+      "id": "moisture-low",
+      "when": { "field": "moisture", "lt": 9.5 },
+      "why": "low moisture (<9.5%): dries fast, so hold back energy to avoid a runaway early rise",
+      "edits": { "preheat_nominal_temperature": -4, "roast_required_power": -40 }
+    },
+    {
+      "id": "altitude-high",
+      "when": { "field": "altitude", "gte": 1500 },
+      "why": "grown at >=1500 m: denser, slower to conduct heat, so add energy",
+      "edits": { "roast_required_power": 40 }
+    },
+    {
+      "id": "process-natural",
+      "when": { "field": "process", "in": ["natural", "anaerobic", "honey", "pulped natural"] },
+      "why": "natural/honey/anaerobic: more sugars on the surface, so ease the early heat to avoid tipping",
+      "edits": { "preheat_nominal_temperature": -4, "roast_min_desired_rate_of_rise": -1 }
+    },
+    {
+      "id": "process-washed",
+      "when": { "field": "process", "in": ["washed", "fully washed"] },
+      "why": "washed: clean surface, tolerates a stronger early curve",
+      "edits": { "roast_required_power": 20 }
+    }
+  ],
+  "load": {
+    "why": "load differs from the profile's reference weight: the same curve needs proportionally more or less energy",
+    "power_per_gram": 5,
+    "preheat_per_gram": 0.08
+  }
+}

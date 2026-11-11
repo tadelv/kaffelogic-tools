@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dial in a roast — Kaffelogic tools</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="./style.css?v=39dec671ce">
+</head>
+<body>
+<nav class="nav"><a href="./index.html">← roast log</a><span>dial in</span></nav>
+
+<h1>Dial in a roast</h1>
+<p class="lead">Enter the green bean and a starting profile. You get a new <code>.kpro</code> whose name and
+description carry the bean id, so the roast log that comes back tells you which coffee it was.</p>
+
+<section class="drop" id="profileDrop">
+  <input type="file" id="profileInput" accept=".kpro,text/plain">
+  <label for="profileInput"><strong>Starting profile</strong><br><span class="hint">.kpro to adapt</span></label>
+  <div class="file" id="profileName">no file</div>
+</section>
+
+<section>
+  <h2>Green bean</h2>
+  <div id="beanFields"></div>
+  <div class="row">
+    <button class="ghost" id="saveBean">Save to bean library</button>
+    <button class="ghost" id="loadBean">Load from library</button>
+    <button class="act" id="suggestBtn" disabled>Suggest edits</button>
+  </div>
+  <p class="hint" id="beanIdHint"></p>
+</section>
+
+<section id="suggestSection" class="hidden">
+  <h2>Suggested edits</h2>
+  <div id="suggestRows"></div>
+  <p class="hint" id="suggestNotes"></p>
+  <div class="row">
+    <button class="act" id="downloadBtn" disabled>Download .kpro</button>
+    <button class="ghost" id="cardBtn" disabled>Download bean card</button>
+  </div>
+  <p class="hint" id="resultNote"></p>
+</section>
+
+<footer>Heuristics are directional, not measured: they nudge the energy keys from density, moisture,
+altitude, process and load. One roast with the diff tells you whether the nudge helped.</footer>
+
+<script type="module" src="./dial.js?v=39dec671ce"></script>
+</body>
+</html>

@@ -25,6 +25,11 @@ jobs:
           node-version: '20'
       - name: JS port must match the Python reference numbers
         run: node web/test.mjs
+      - name: Build site with content-hashed asset URLs
+        run: node web/build.mjs
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
 
   deploy:
     needs: test
@@ -34,7 +39,13 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
       - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: web
       - uses: actions/upload-pages-artifact@v3
         with:
           path: web
