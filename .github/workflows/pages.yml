@@ -16,23 +16,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      - name: JS port must match the Python reference numbers
-        run: node web/test.mjs
-      - name: Build site with content-hashed asset URLs
-        run: node web/build.mjs
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
-
   deploy:
-    needs: test
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -42,12 +26,19 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+
+      # The JS port must keep producing the same numbers as the Python CLI.
+      - name: Reference test
+        run: node web/test.mjs
+
+      # Content-hashed asset URLs: GitHub Pages serves assets with max-age=14400,
+      # so an unhashed app.js can be stale in a browser for hours after a deploy.
+      - name: Build site
+        run: node web/build.mjs
+
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: web
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: web
+          path: dist
       - id: deployment
         uses: actions/deploy-pages@v4
