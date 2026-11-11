@@ -1,7 +1,8 @@
 import {
   parseProfile, serializeProfile, parseKlog, metrics, phases, diff,
-  applyEdits, buildBrief, editSurface, SYMPTOM_GUIDE,
+  applyEdits, buildBrief, editSurface, profileZones, SYMPTOM_GUIDE,
 } from './klt.js';
+import { roastCharts, profileSchematic } from './chart.js';
 
 const $ = (id) => document.getElementById(id);
 const state = { log: null, logName: '', profile: null, profileName: '', attrs: new Set() };
@@ -77,9 +78,15 @@ const sign = (v) => (v > 0 ? { text: `+${v}`, cls: 'num pos' } : v < 0 ? { text:
 const num = (v, suffix = '') => ({ text: v == null ? '–' : `${v}${suffix}`, cls: 'num' });
 
 function render() {
-  if (!state.log) return;
+  if (!state.log) {
+    renderProfileOnly();
+    return;
+  }
   const m = metrics(state.log);
   $('summary').classList.remove('hidden');
+  $('chartSection').classList.remove('hidden');
+  const zones = state.profile ? profileZones(state.profile.kv) : [];
+  $('charts').innerHTML = roastCharts(m, state.log, zones);
   $('summaryTable').innerHTML = table(
     [
       ['profile', m.profile, m.level ? `level ${m.level}` : ''],
@@ -118,7 +125,11 @@ function render() {
     }
   }
 
-  if (!state.profile) return;
+  if (!state.profile) {
+    $('phaseSection').classList.add('hidden');
+    $('editSection').classList.add('hidden');
+    return;
+  }
   const d = diff(state.log, state.profile);
   $('phaseSection').classList.remove('hidden');
   $('phaseTable').innerHTML = table(
@@ -138,6 +149,13 @@ function render() {
   renderEditRows();
   $('editSection').classList.remove('hidden');
   renderEditNote();
+}
+
+function renderProfileOnly() {
+  if (!state.profile) return;
+  const zones = profileZones(state.profile.kv);
+  $('chartSection').classList.remove('hidden');
+  $('charts').innerHTML = profileSchematic(state.profile.kv, zones);
 }
 
 function renderEditRows() {
